@@ -13,6 +13,7 @@ img_size_height = 300
 
 ''''''''''''''''''''' Realtime Webcam Code '''''''''''''''''''''''
 cap = cv2.VideoCapture(0)
+masked_img = np.zeros((img_size_width, img_size_height, 3), np.uint8)
 
 while True:
     ret, img = cap.read()
@@ -78,6 +79,7 @@ while True:
 # draw_img = np.zeros((org_img.shape[0], org_img.shape[1], org_img.shape[2]), np.uint8)
 # gray = cv2.cvtColor(org_img, cv2.COLOR_BGR2GRAY)
 # faces = detector(gray, 1)
+# print("Number of Faces Detected: ", len(faces))
 #
 # for face in faces:
 #     landmarks = predictor(gray, face)
