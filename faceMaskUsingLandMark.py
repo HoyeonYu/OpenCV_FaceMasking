@@ -1,13 +1,10 @@
 import cv2
 import dlib
 import numpy as np
-import imutils
 
 detector = dlib.get_frontal_face_detector()
 
-COLOR_BLUE = (255, 0, 0)
-COLOR_GREEN = (0, 255, 0)
-COLOR_RED = (0, 0, 255)
+COLOR_WHITE = (255, 255, 255)
 
 # cap = cv.VideoCapture(0)
 org_img = cv2.imread('person.jpg')
@@ -16,9 +13,11 @@ if org_img is None:
     print('File Not Available')
     exit(0)
 
-org_img = imutils.resize(org_img, width=500)
+img_size_width = 500
+img_size_height = 500
+org_img = cv2.resize(org_img, dsize=(img_size_width, img_size_height), interpolation=cv2.INTER_LINEAR)
+draw_img = np.zeros((org_img.shape[0], org_img.shape[1], org_img.shape[2]), np.uint8)
 gray = cv2.cvtColor(org_img, cv2.COLOR_BGR2GRAY)
-
 faces = detector(gray, 1)
 print("Number of Faces Detected: ", len(faces))
 
@@ -33,10 +32,8 @@ for face in faces:
         left_eye_points.append(point)
 
     left_eye_mask = np.array(left_eye_points, dtype=np.int32)
-    # img_line = cv2.polylines(org_img, [left_eye_mask], True, COLOR_RED, thickness=2, lineType=cv2.LINE_8)
-    # img_masked = cv2.fillPoly(img_line, [left_eye_mask], COLOR_RED, lineType=cv2.LINE_AA)
-    img_line = cv2.polylines(org_img, [left_eye_mask], True, 0, thickness=2, lineType=cv2.LINE_8)
-    img_masked = cv2.fillPoly(img_line, [left_eye_mask], 0, lineType=cv2.LINE_AA)
+    img_line = cv2.polylines(draw_img, [left_eye_mask], True, COLOR_WHITE, thickness=2, lineType=cv2.LINE_8)
+    draw_img = cv2.fillPoly(img_line, [left_eye_mask], COLOR_WHITE, lineType=cv2.LINE_AA)
 
     right_eye_points = []
     for i in range(42, 48):
@@ -44,10 +41,8 @@ for face in faces:
         right_eye_points.append(point)
 
     right_eye_mask = np.array(right_eye_points, dtype=np.int32)
-    # img_line = cv2.polylines(org_img, [right_eye_mask], True, COLOR_GREEN, thickness=2, lineType=cv2.LINE_8)
-    # img_masked = cv2.fillPoly(img_line, [right_eye_mask], COLOR_GREEN, lineType=cv2.LINE_AA)
-    img_line = cv2.polylines(org_img, [right_eye_mask], True, 0, thickness=2, lineType=cv2.LINE_8)
-    img_masked = cv2.fillPoly(img_line, [right_eye_mask], 0, lineType=cv2.LINE_AA)
+    img_line = cv2.polylines(draw_img, [right_eye_mask], True, COLOR_WHITE, thickness=2, lineType=cv2.LINE_8)
+    draw_img = cv2.fillPoly(img_line, [right_eye_mask], COLOR_WHITE, lineType=cv2.LINE_AA)
 
     mouth_points = []
     for i in range(48, 60):
@@ -55,11 +50,19 @@ for face in faces:
         mouth_points.append(point)
 
     mouth_mask = np.array(mouth_points, dtype=np.int32)
-    # img_line = cv2.polylines(org_img, [mouth_mask], True, COLOR_BLUE, thickness=2, lineType=cv2.LINE_8)
-    # img_masked = cv2.fillPoly(img_line, [mouth_mask], COLOR_BLUE, lineType=cv2.LINE_AA)
-    img_line = cv2.polylines(org_img, [mouth_mask], True, 0, thickness=2, lineType=cv2.LINE_8)
-    img_masked = cv2.fillPoly(img_line, [mouth_mask], 0, lineType=cv2.LINE_AA)
+    img_line = cv2.polylines(draw_img, [mouth_mask], True, COLOR_WHITE, thickness=2, lineType=cv2.LINE_8)
+    draw_img = cv2.fillPoly(img_line, [mouth_mask], COLOR_WHITE, lineType=cv2.LINE_AA)
 
-save_image_file = "masked_image.jpg"
-print("Saving output image to", save_image_file)
-cv2.imwrite(save_image_file, img_masked)
+
+save_image_file = "org_img.jpg"
+print("Save Image:", save_image_file)
+cv2.imwrite(save_image_file, org_img)
+
+save_image_file = "draw_img.jpg"
+print("Save Image:", save_image_file)
+cv2.imwrite(save_image_file, draw_img)
+
+masked_img = cv2.bitwise_and(org_img, draw_img)
+save_image_file = "masked_img.jpg"
+print("Save Image:", save_image_file)
+cv2.imwrite(save_image_file, masked_img)
