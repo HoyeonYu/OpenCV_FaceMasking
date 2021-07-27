@@ -63,6 +63,7 @@ while True:
 
     if cv2.waitKey(1) == ord('q'):
         sys.exit(1)
+        cv2.destroyAllWindows()
 
 
 # ''''''''''''''''''''' Image Code '''''''''''''''''''''''
