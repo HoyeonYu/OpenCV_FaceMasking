@@ -1,3 +1,4 @@
+import os
 import sys
 import cv2
 import dlib
@@ -75,7 +76,7 @@ while True:
     if cv2.waitKey(1) == ord('q'):
         sys.exit(1)
 
-#
+
 # ''''''''''''''''''''' Image Code '''''''''''''''''''''''
 # # org_img = cv2.imread('person.jpg')
 # org_img = cv2.imread('people.jpg')
@@ -130,14 +131,18 @@ while True:
 #     x, y, w, h = cv2.boundingRect(contour)
 #     cv2.rectangle(draw_img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 #
+# contour_dir = 'contour_img'
+# if not os.path.exists(contour_dir):
+#     os.makedirs(contour_dir)
+#
 # save_image_file = "org_img.jpg"
 # print("Save Image:", save_image_file)
-# cv2.imwrite(save_image_file, org_img)
+# cv2.imwrite(contour_dir + '/' + save_image_file, org_img)
 #
 # save_image_file = "binary_masked.jpg"
 # print("Save Image:", save_image_file)
-# cv2.imwrite(save_image_file, draw_img_gray)
+# cv2.imwrite(contour_dir + '/' + save_image_file, draw_img_gray)
 #
 # save_image_file = "draw_contour.jpg"
 # print("Save Image:", save_image_file)
-# cv2.imwrite(save_image_file, draw_img)
+# cv2.imwrite(contour_dir + '/' + save_image_file, draw_img)
